@@ -9,14 +9,23 @@ use Illuminate\Support\Facades\Auth;
 class autenticadorController extends Controller
 {
     public function registro(Request $request)
-    {
+    {   
+        //Mensagens erros
+        $messages = [
+            'required' => 'O :attribute está vazio',
+            'string' => 'O :attribute deve ser um texto',
+            'email' => 'O :attribute não é um email válido',
+            'unique' => 'O :attribute já existe'
+        ];
+
         //Validando nome e senha
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|',
             'genre' => 'required|string'
-        ]);
+        ],$messages);
+
         //Criando usuario
         $user = new User([
             'name' => $request->name,
@@ -24,11 +33,9 @@ class autenticadorController extends Controller
             'password' => bcrypt($request->password),
             'genre' => $request->genre
         ]);
-
-        if ($user->save()) {
-            return response()->json('Usuário criado com sucesso', 201);
-        } else {
-            return response()->json('Erro tente ao criar o usuário', 400);
+        
+        if($user->save()){
+            return response()->json(["mensagem" => "Usuário criado com sucesso"], 200);
         }
     }
 
