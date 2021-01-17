@@ -53,7 +53,7 @@ class autenticadorController extends Controller
         ];
 
         if (!Auth::attempt($credenciais)) {
-            return response()->json('Email ou senha incorretos', 200);
+            return response()->json('Email ou senha incorretos', 400);
         }
         $user = $request->user();
         $token = $user->createToken('Token acesso')->accessToken;

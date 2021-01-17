@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\autenticadorController;
+use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,9 @@ Route::prefix('auth')->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::post('logout', [autenticadorController::class, 'logout']);
     });
+});
+
+//Usuario
+Route::group(['prefix' => 'user','middleware' => ['auth:api']], function() {
+    Route::get('{id}',[userController::class,'show']);
 });
