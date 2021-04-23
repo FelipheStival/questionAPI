@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use PhpParser\Node\Stmt\TryCatch;
+use Response;
 
 class userController extends Controller
 {
@@ -47,8 +51,8 @@ class userController extends Controller
      */
     public function show($id)
     {
-        $usuario =  User::where('id',$id)->first();
-        if($usuario != null){
+        $usuario =  User::where('id', $id)->first();
+        if ($usuario != null) {
             return response()->json($usuario, 200);
         } else {
             return response()->json('Usuario nao encontrado', 404);
@@ -64,6 +68,17 @@ class userController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function info()
+    {
+        return Auth::user();
     }
 
     /**
@@ -87,5 +102,24 @@ class userController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function photo($id)
+    {
+        //Getting user
+        $path = User::find($id)->profile_image;
+        $exists = Storage::disk('public')->exists($path);
+
+        if ($exists) {
+            return Storage::download($path);
+        } else {
+            abort(404);
+        }
     }
 }

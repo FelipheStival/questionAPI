@@ -31,6 +31,10 @@ Route::prefix('auth')->group(function () {
 });
 
 //Usuario
-Route::group(['prefix' => 'user','middleware' => ['auth:api']], function() {
-    Route::get('{id}',[userController::class,'show']);
+Route::group(['prefix' => 'user'], function () {
+    Route::middleware(['auth:api'])->group(function () {
+        //Route::get('{id}', [userController::class, 'show']);
+        Route::get('/info',[userController::class, 'info']);
+    });
+    Route::get('/image/{id}', [userController::class, 'photo']);
 });
